@@ -1,0 +1,90 @@
+Parameters:
+  CIDRBlock:
+    Type: String
+    Description: CIDR for VPC
+    ConstraintDescription: must be valid IP CIDR range of format x.x.x.x/x
+
+  PublicSubnetCIDR:
+    Type: String
+    Description: CIDR for VPC
+    ConstraintDescription: must be valid IP CIDR range of format x.x.x.x/x
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref CIDRBlock
+      Tags:
+        - Key: Name
+          Value: CftVPC
+
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: !Ref PublicSubnetCIDR
+      VpcId: !Ref VPC
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: CftPublicSubnet
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: CftIGW
+
+  AttachInternetGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: CftPublicRoute
+      VpcId: !Ref VPC
+
+  PublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+      RouteTableId: !Ref PublicRouteTable
+
+  PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet
+
+  SSHSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access on port 22
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+      Tags:
+        - Key: Name
+          Value: CftSG
+      VpcId: !Ref VPC
+
+Outputs:
+  PublicSubnetId:
+    Description: Public Subnet Id for EC2 instance
+    Value: !Ref PublicSubnet
+    Export:
+      Name: PublicSubnet
+
+  SSHSecurityGroupId:
+    Description: Security Group which enables ssh access on port 22
+    Value: !Ref SSHSecurityGroup
+    Export:
+      Name: SSHSecurityGroup
