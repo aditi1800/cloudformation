@@ -16,6 +16,13 @@ pipeline{
     }
     
     stages{
-        stage()
+        stage('Create network stack'){
+            steps{
+                sh 'aws cloudformation create-stack --stack-name jenkins-network --template-body file://network.yaml \
+                --pameters ParameterKey=CIDRBlock,ParameterValue=${CIDRBlock} \
+                ParameterKey=PublicSubnetCIDR,ParameterValue=${PublicSubnetCIDR}'
+                
+            }
+        }
     }
 }
