@@ -13,6 +13,7 @@ pipeline{
     environment{
     AWS_ACCESS_KEY_ID=credentials('AWS_ACCESS_KEY_ID')
     AWS_ACCESS_KEY_TOKEN=credentials('AWS_ACCESS_KEY_TOKEN')
+    AWS_SESSION_TOKEN = credentials('AWS_SESSION_TOKEN')
     }
     
     stages{
