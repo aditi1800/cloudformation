@@ -5,8 +5,8 @@ pipeline{
     agent any
     
     parameters{
-    string(name: 'CIDRBlock', defaultValue: '', description: 'CIDR block for VPC')
-    string(name: 'PublicSubnetCIDR', defaultValue: '', description: 'CIDR block for Public Subnet')
+    string(name: 'CIDRBlock', defaultValue: '10.4.0.0/16', description: 'CIDR block for VPC')
+    string(name: 'PublicSubnetCIDR', defaultValue: '10.4.1.0/24', description: 'CIDR block for Public Subnet')
     string(name: 'InstanceType', defaultValue: '', description: 'EC2 Instance Type')
     string(name: 'ImageId', defaultValue: '', description: 'EC2 Image Id')
     string(name: 'KeyPair', defaultValue: '', description: 'Key Pair for EC2')
