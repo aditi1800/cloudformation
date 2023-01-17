@@ -23,7 +23,7 @@ pipeline{
             steps{
                 sh 'curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"'
                 sh 'unzip awscliv2.zip'
-                sh 'sudo ./aws/install'
+                sh ' ./aws/install'
                 sh 'aws cloudformation create-stack --stack-name jenkins-network --template-body file://network.yaml \
                 --pameters ParameterKey=CIDRBlock,ParameterValue=${CIDRBlock} \
                 ParameterKey=PublicSubnetCIDR,ParameterValue=${PublicSubnetCIDR}'
